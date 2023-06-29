@@ -45,6 +45,10 @@ canvas {
     height: 30px;
 }
 
+.sliderLabel {
+    margin-top: 0.5rem;
+}
+
 #slider {
     background-color: white;
     border-radius: 4px;
