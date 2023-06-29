@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="assets/css/styles.css" />
+        <title>Genetic Algorithms</title>
+    </head>
+    <body>
+        <div id="gameContainer">
+            <h1 class="header">Genetic Algorithm Simulation</h1>
+            <div class="window">
+                <canvas id="canvas" height="500px" width="500px" style="border: 1px solid black;"></canvas>
+                <div class="settings">
+                    <button class="button" id="start" onclick="startSimulation()">Start Simulation</button>
+                    <div class="sliderContainer">
+                        <p class="settingsHdr">Ticks / Second: </p>
+                        <div class="slider">
+                            <input id="slider" type="range" min="1" max="60" value="30" oninput="fpsValue.innerText = this.value">
+                            <p id="fpsValue">30</p>
+                        </div>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="settingsHdr">Ticks / Generation: </p>
+                        <div class="slider">
+                            <input id="slider" type="range" min="10" max="200" value="100" oninput="tickValue.innerText = this.value">
+                            <p id="tickValue">100</p>
+                        </div>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="settingsHdr">Generations: </p>
+                        <div class="slider">
+                            <input id="slider" type="range" min="1" max="200" value="100" oninput="generationsValue.innerText = this.value">
+                            <p id="generationsValue">100</p>
+                        </div>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="settingsHdr">Agents / Generation: </p>
+                        <div class="slider">
+                            <input id="slider" type="range" min="1" max="300" value="100" oninput="agentsValue.innerText = this.value">
+                            <p id="agentsValue">100</p>
+                        </div>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="settingsHdr">Agents Kept / Generation: </p>
+                        <div class="slider">
+                            <input id="slider" type="range" min="1" max="100" value="10" oninput="keptValue.innerText = this.value">
+                            <p id="keptValue">10</p>
+                        </div>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="settingsHdr">Mutation Chance: </p>
+                        <div class="slider">
+                            <input id="slider" type="range" min="0" max="1" value="0.1" step="0.01" oninput="mutationValue.innerText = this.value">
+                            <p id="mutationValue">0.1</p>
+                        </div>
+                    </div>
+                    <div class="coordContainer">
+                        <p class="settingsHdr">Start Position: </p>
+                        <input class="coord" id="startx" placeholder="x" type="number"></input>
+                        <input class="coord" id="starty" placeholder="y" type="number"></input>
+                    </div>
+                    <div class="coordContainer">
+                        <p class="settingsHdr">Goal Position: </p>
+                        <input class="coord" id="goalx" placeholder="x" type="number"></input>
+                        <input class="coord" id="goaly" placeholder="y" type="number"></input>
+                    </div>
+                    <h3 class="counter">Current generation: <span id="gen">1</span></h3>
+                    <button class="button" id="stop" disabled onclick="stopSimulation()">Stop Simulation</button>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="assets/js/agent.js"></script>
+        <script type="text/javascript" src="assets/js/helper.js"></script>
+        <script type="text/javascript" src="assets/js/genetic_simulation.js"></script>
+    </body>
+</html>
