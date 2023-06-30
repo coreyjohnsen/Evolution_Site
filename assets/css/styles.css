@@ -1,3 +1,4 @@
+/* Common styles for both desktop and mobile */
 #gameContainer {
     display: flex;
     flex-direction: column;
@@ -45,10 +46,6 @@ canvas {
     height: 30px;
 }
 
-.sliderLabel {
-    margin-top: 0.5rem;
-}
-
 #slider {
     background-color: white;
     border-radius: 4px;
@@ -78,31 +75,50 @@ canvas {
     background-color: #999999;
     transition: background-color 0.3s ease;
     cursor: pointer;
-  }
-  
-  .button:hover {
-    background-color: #3d3d3d;
-  }
-  
-  .button:active {
-    background-color: #3d3d3d;
-  }
-  
-  .button:focus {
-    outline: none;
-  }
+}
 
-  .coordContainer {
+.button:hover {
+    background-color: #3d3d3d;
+}
+
+.button:active {
+    background-color: #3d3d3d;
+}
+
+.button:focus {
+    outline: none;
+}
+
+.coordContainer {
     display: flex;
     justify-content: space-around;
-  }
+}
 
-  .coord {
+.coord {
     margin-top: 0.3rem;
     height: 1rem;
     width: 3rem;
-  }
+}
 
-  .counter {
+.counter {
     margin: 0.4rem 0 0.4rem 0;
-  }
+}
+
+/* Styles specific to mobile */
+@media (max-width: 1000px) {
+    .window {
+        flex-direction: column;
+        gap: 2rem;
+        width: 90%;
+    }
+
+    canvas {
+        height: 500px;
+        width: 500px;
+    }
+
+    .settings {
+        width: 90%;
+    }
+}
+
