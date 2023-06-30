@@ -2,12 +2,10 @@
 var canvas = document.getElementById("canvas");
 canvas.addEventListener('mousedown', function (e) {
     var pos = getCursorPosition(canvas, e)
-    pos = pxToGrid(pos[0], pos[1])
+    pos = pxToGrid(pos[0], pos[1], scale)
     toggleWall(pos[0], pos[1])
 })
 var ctx = canvas.getContext("2d");
-
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 var agent_start = {
     x: 5,
@@ -70,30 +68,6 @@ function stopSimulation() {
     stopButton.disabled = true;
 }
 
-function getRandomGenome() {
-    let genome = []
-    for (let i = 0; i < ticks; i++) {
-        num = Math.floor(Math.random() * 4);
-        move = 'x'
-        switch (num) {
-            case 0:
-                move = 'u'
-                break;
-            case 1:
-                move = 'd'
-                break;
-            case 2:
-                move = 'l'
-                break;
-            case 3:
-                move = 'r'
-                break;
-        }
-        genome.push(move)
-    }
-    return genome;
-}
-
 const grid = []
 for (let i = 0; i < grid_count; i++) {
     let temp = []
@@ -140,7 +114,7 @@ function drawWalls() {
 }
 
 function toggleWall(x, y) {
-    if (grid[x][y] == 0 && (x != agent_start.x || y!= agent_start.y) && (x!= agent_goal.x || y!= agent_goal.y))
+    if (grid[x][y] == 0 && (x != agent_start.x || y != agent_start.y) && (x != agent_goal.x || y != agent_goal.y))
         grid[x][y] = 1
     else
         grid[x][y] = 0
@@ -149,8 +123,8 @@ function toggleWall(x, y) {
 function drawAgentStart() {
     startx = document.getElementById("startx");
     starty = document.getElementById("starty");
-    agent_start.x = clamp(startx.value, 0, grid_count-1);
-    agent_start.y = clamp(starty.value, 0, grid_count-1)
+    agent_start.x = clamp(startx.value, 0, grid_count - 1);
+    agent_start.y = clamp(starty.value, 0, grid_count - 1)
     var style = ctx.fillStyle
     ctx.fillStyle = 'skyblue';
     ctx.fillRect(agent_start.x * scale, agent_start.y * scale, scale, scale);
@@ -160,25 +134,12 @@ function drawAgentStart() {
 function drawAgentEnd() {
     goalx = document.getElementById("goalx");
     goaly = document.getElementById("goaly");
-    agent_goal.x = clamp(goalx.value, 0, grid_count-1)
-    agent_goal.y = clamp(goaly.value, 0, grid_count-1)
+    agent_goal.x = clamp(goalx.value, 0, grid_count - 1)
+    agent_goal.y = clamp(goaly.value, 0, grid_count - 1)
     var style = ctx.fillStyle
     ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
     ctx.fillRect(agent_goal.x * scale, agent_goal.y * scale, scale, scale);
     ctx.fillStyle = style
-}
-
-function pxToGrid(x, y) {
-    var grid_x = Math.floor(x / scale);
-    var grid_y = Math.floor(y / scale);
-    return [grid_x, grid_y];
-}
-
-function getCursorPosition(c, event) {
-    const rect = c.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
-    return [x, y]
 }
 
 function drawAgents() {
@@ -192,7 +153,7 @@ function drawAgents() {
 
 function moveAgents() {
     for (let a of agents) {
-        a.runTick(curr_tick)
+        a.runTick(curr_tick, grid)
     }
 }
 
@@ -246,33 +207,9 @@ function reproduce(s, new_agents) {
         ret.push(new Agent(agent_start.x, agent_start.y, new_agent))
     }
     for (let a of ret) {
-        mutate(a)
+        mutate(a, mutation_chance)
     }
     return ret
-}
-
-function mutate(agent) {
-    for (let i = 0; i < agent.genome.length; i++) {
-        if (Math.random() < mutation_chance) {
-            num = Math.floor(Math.random() * 4);
-            move = 'x'
-            switch (num) {
-                case 0:
-                    move = 'u'
-                    break;
-                case 1:
-                    move = 'd'
-                    break;
-                case 2:
-                    move = 'l'
-                    break;
-                case 3:
-                    move = 'r'
-                    break;
-            }
-            agent.genome[i] = move
-        }
-    }
 }
 
 function gameLoop() {

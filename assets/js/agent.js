@@ -5,11 +5,11 @@ class Agent {
         this.genome = genome;
     }
 
-    runTick(tick) {
-        this.move(this.genome[tick]);
+    runTick(tick, grid) {
+        this.move(this.genome[tick], grid);
     }
 
-    move(dir) {
+    move(dir, grid) {
         switch (dir) {
             case 'u':
                 if (this.y > 0 && grid[this.x][this.y - 1] != 1)
@@ -32,5 +32,9 @@ class Agent {
 
     evalReward(agent_goal) {
         this.reward = Math.abs(agent_goal.x - this.x) + Math.abs(agent_goal.y - this.y)
+    }
+
+    evalZonedReward(zone) {
+        this.reward = (this.x >= zone.x1 && this.x <= zone.x1 + zone.w && this.y >= zone.y1 && this.y <= zone.y1 + zone.h) ? 1 : 0;
     }
 }

@@ -1,12 +1,14 @@
 /* Common styles for both desktop and mobile */
-#gameContainer {
+.gameContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 3rem;
 }
 
 .header {
     color: white;
+    text-align: center;
 }
 
 body {
@@ -121,4 +123,3 @@ canvas {
         width: 90%;
     }
 }
-
