@@ -1,6 +1,6 @@
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
-function getRandomGenome() {
+function getRandomGenome(ticks) {
     let genome = []
     for (let i = 0; i < ticks; i++) {
         num = Math.floor(Math.random() * 4);
@@ -71,4 +71,8 @@ function get_random_agents(n) {
         ))
     }
     return a
+}
+
+function flatten(grid) {
+    return grid.reduce((a, b) => a.concat(b), [])
 }

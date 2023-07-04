@@ -10,16 +10,27 @@
 
 <body>
     <h1 class="header">Genetic Algorithm Simulation</h1>
+    <div class="description">
+        <h2 class="subheader">Version 1</h2>
+        <p>
+            Version 1 of the simulation has agents trying to find a path from a start position (marked in blue) to a goal (marked in red). An agent is defined simply by a position and a genome. This genome is extremely basic 
+            and consists of the move that will be made at each tick. An example genome for a 10 tick generation is <code>['u', 'd', 'd', 'r', 'u', 'l', 'l', 'd', 'l', 'u']</code>. The simulation runs in generations, and each generation 
+            runs in ticks. At each tick, an agent can move either north, south, east, or west. At the end of a generation, each agent is given a score based on how close they are to the goal (ignoring any obstacles). The agents who have the lowest score
+            will survive to the next generation. They will also randomly reproduce with other surviving agents. Offspring are created by splitting the parents' genomes at the same random position. The offspring's genome will consist of 
+            the first section of the first parent's genome and the second section of the second parent's genome. This resulting genome will then go through a mutation process, where each individual gene (or move) in the genome has
+            a chance to be replaced with a random move. The simulation ends once the maximum number of generations is reached. In the simulation below, all of these values can be tweaked, and obstacles can be drawn by clicking on the grid.
+        </p>
+    </div>
     <div class="gameContainer">
         <div class="window">
-            <canvas id="canvas" height="500px" width="500px" style="border: 1px solid black;"></canvas>
+            <canvas id="v1Canvas" height="500px" width="500px" style="border: 1px solid black;"></canvas>
             <div class="settings">
-                <button class="button" id="start" onclick="startSimulation()">Start Simulation</button>
+                <button class="button" id="v1_start" onclick="v1_start()">Start Simulation</button>
                 <div class="sliderContainer">
                     <p class="settingsHdr">Ticks / Second: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="60" value="30"
-                            oninput="fpsValue.innerText = this.value">
+                            oninput="fpsValue.innerText = this.value" onchange="v1_updateFps(this.value)">
                         <p class="sliderLabel" id="fpsValue">30</p>
                     </div>
                 </div>
@@ -27,7 +38,7 @@
                     <p class="settingsHdr">Ticks / Generation: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="10" max="200" value="100"
-                            oninput="tickValue.innerText = this.value">
+                            oninput="tickValue.innerText = this.value" onchange="v1_updateTicks(this.value)">
                         <p class="sliderLabel" id="tickValue">100</p>
                     </div>
                 </div>
@@ -35,7 +46,7 @@
                     <p class="settingsHdr">Generations: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="200" value="100"
-                            oninput="generationsValue.innerText = this.value">
+                            oninput="generationsValue.innerText = this.value" onchange="v1_updateGenerations(this.value)">
                         <p class="sliderLabel" id="generationsValue">100</p>
                     </div>
                 </div>
@@ -43,7 +54,7 @@
                     <p class="settingsHdr">Agents / Generation: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="300" value="100"
-                            oninput="agentsValue.innerText = this.value">
+                            oninput="agentsValue.innerText = this.value" onchange="v1_updateAgentsPerGen(this.value)">
                         <p class="sliderLabel" id="agentsValue">100</p>
                     </div>
                 </div>
@@ -51,7 +62,7 @@
                     <p class="settingsHdr">Agents Kept / Generation: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="100" value="10"
-                            oninput="keptValue.innerText = this.value">
+                            oninput="keptValue.innerText = this.value" onchange="v1_updateSurvivedPerGen(this.value)">
                         <p class="sliderLabel" id="keptValue">10</p>
                     </div>
                 </div>
@@ -59,97 +70,125 @@
                     <p class="settingsHdr">Mutation Chance: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="0" max="1" value="0.1" step="0.01"
-                            oninput="mutationValue.innerText = this.value">
+                            oninput="mutationValue.innerText = this.value" onchange="v1_updateMutationChance(this.value)">
                         <p class="sliderLabel" id="mutationValue">0.1</p>
                     </div>
                 </div>
                 <div class="coordContainer">
                     <p class="settingsHdr">Start Position: </p>
-                    <input class="coord" id="startx" placeholder="x" type="number"></input>
-                    <input class="coord" id="starty" placeholder="y" type="number"></input>
+                    <input class="coord" id="startx" placeholder="x: 0" type="number" onchange="v1_updateStartX(this.value)"></input>
+                    <input class="coord" id="starty" placeholder="y: 0" type="number" onchange="v1_updateStartY(this.value)"></input>
                 </div>
                 <div class="coordContainer">
                     <p class="settingsHdr">Goal Position: </p>
-                    <input class="coord" id="goalx" placeholder="x" type="number"></input>
-                    <input class="coord" id="goaly" placeholder="y" type="number"></input>
+                    <input class="coord" id="goalx" placeholder="x: 19" type="number" onchange="v1_updateEndX(this.value)"></input>
+                    <input class="coord" id="goaly" placeholder="y: 19" type="number" onchange="v1_updateEndY(this.value)"></input>
                 </div>
-                <h3 class="counter">Current generation: <span id="gen">1</span></h3>
-                <button class="button" id="stop" disabled onclick="stopSimulation()">Stop Simulation</button>
+                <h3 class="counter">Current generation: <span id="v1_gen">1</span></h3>
+                <button class="button" id="v1_stop" disabled onclick="v1_stop()">Stop Simulation</button>
             </div>
         </div>
     </div>
+    <div class="description">
+        <p>
+            This simple model obviously has a few drawbacks. For one, because an agent's behavior is based simply on a set of moves that is predetermined, the agent has no way to adapt
+            to its position on the fly. Additionally, the fact that the reward is based on distance ignoring obstacles means that agents can easily be trapped and evolve to be caught in obstacles that allow the
+            agents to get close to the goal without ever being able to reach it. An example of one such trap is shown below.
+        </p>
+        <img class="image" src="media/images/trap1.jpg" alt="A trap for agents" />
+        <p>
+            Sometimes this can be overcome by increasing mutation rate, ticks per generation, number of agents, and so on, but the more complex the traps are the worse the agents tend to evolve around them. This could be addressed
+            by improving the fitness function or giving the agents a more capable "brain".
+        </p>
+    </div>
+    <div class="description">
+        <h2 class="subheader">Version 2 - Neural Networks</h2>
+        <p>
+            Version 2 of the simulation has agents attempting the same task as above, however now the agents are controlled by a neural network.
+            The input to this network is the agent's current position, the goal position, and the grid layout in the surrounding 3x3 area with the agent in the center.
+            The network by default has 12 input nodes, an output layer with 4 nodes (with each node corresponding to a direction to move), and 2 hidden layers with 32
+            and 16 nodes respectively. As it turns out, these agents tend to have different behaviors than version 1 agents and appear to adapt quicker to changes
+            in the enviornment, however they are not necessarily better than the version 1 agents.
+        </p>
+    </div>
     <div class="gameContainer">
         <div class="window">
-            <canvas id="canvas2" height="500px" width="500px" style="border: 1px solid black;"></canvas>
+            <canvas id="nnCanvas" height="500px" width="500px" style="border: 1px solid black;"></canvas>
             <div class="settings">
-                <button class="button" id="start2" onclick="startZoneSimulation()">Start Simulation</button>
+                <button class="button" id="nn_start" onclick="nn_start()">Start Simulation</button>
                 <div class="sliderContainer">
                     <p class="settingsHdr">Ticks / Second: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="60" value="30"
-                            oninput="fpsValue_zone.innerText = this.value">
-                        <p class="sliderLabel" id="fpsValue_zone">30</p>
+                            oninput="fpsValue_nn.innerText = this.value" onchange="nn_updateFps(this.value)">
+                        <p class="sliderLabel" id="fpsValue_nn">30</p>
                     </div>
                 </div>
                 <div class="sliderContainer">
                     <p class="settingsHdr">Ticks / Generation: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="10" max="200" value="100"
-                            oninput="tickValue_zone.innerText = this.value">
-                        <p class="sliderLabel" id="tickValue_zone">100</p>
+                            oninput="tickValue_nn.innerText = this.value" onchange="nn_updateTicks(this.value)">
+                        <p class="sliderLabel" id="tickValue_nn">100</p>
                     </div>
                 </div>
                 <div class="sliderContainer">
                     <p class="settingsHdr">Generations: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="200" value="100"
-                            oninput="generationsValue_zone.innerText = this.value">
-                        <p class="sliderLabel" id="generationsValue_zone">100</p>
+                            oninput="generationsValue_nn.innerText = this.value" onchange="nn_updateGenerations(this.value)">
+                        <p class="sliderLabel" id="generationsValue_nn">100</p>
                     </div>
                 </div>
                 <div class="sliderContainer">
                     <p class="settingsHdr">Agents / Generation: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="300" value="100"
-                            oninput="agentsValue_zone.innerText = this.value">
-                        <p class="sliderLabel" id="agentsValue_zone">100</p>
+                            oninput="agentsValue_nn.innerText = this.value" onchange="nn_updateAgentsPerGen(this.value)">
+                        <p class="sliderLabel" id="agentsValue_nn">100</p>
                     </div>
                 </div>
                 <div class="sliderContainer">
                     <p class="settingsHdr">Agents Kept / Generation: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="1" max="100" value="10"
-                            oninput="keptValue_zone.innerText = this.value">
-                        <p class="sliderLabel" id="keptValue_zone">10</p>
+                            oninput="keptValue_nn.innerText = this.value" onchange="nn_updateSurvivedPerGen(this.value)">
+                        <p class="sliderLabel" id="keptValue_nn">10</p>
                     </div>
                 </div>
                 <div class="sliderContainer">
                     <p class="settingsHdr">Mutation Chance: </p>
                     <div class="slider">
                         <input id="slider" type="range" min="0" max="1" value="0.1" step="0.01"
-                            oninput="mutationValue_zone.innerText = this.value">
-                        <p class="sliderLabel" id="mutationValue_zone">0.1</p>
+                            oninput="mutationValue_nn.innerText = this.value" onchange="nn_updateMutationChance(this.value)">
+                        <p class="sliderLabel" id="mutationValue_nn">0.1</p>
                     </div>
                 </div>
                 <div class="coordContainer">
-                    <p class="settingsHdr">Zone Position: </p>
-                    <input class="coord" id="zonex" placeholder="x" type="number"></input>
-                    <input class="coord" id="zoney" placeholder="y" type="number"></input>
+                    <p class="settingsHdr">Start Position: </p>
+                    <input class="coord" id="startx_nn" placeholder="x: 0" type="number" onchange="nn_updateStartX(this.value)"></input>
+                    <input class="coord" id="starty_nn" placeholder="y: 0" type="number" onchange="nn_updateStartY(this.value)"></input>
                 </div>
                 <div class="coordContainer">
-                    <p class="settingsHdr">Zone Dimension: </p>
-                    <input class="coord" id="zonewidth" placeholder="width" type="number"></input>
-                    <input class="coord" id="zoneheight" placeholder="height" type="number"></input>
+                    <p class="settingsHdr">Goal Position: </p>
+                    <input class="coord" id="goalx_nn" placeholder="x: 19" type="number" onchange="nn_updateEndX(this.value)"></input>
+                    <input class="coord" id="goaly_nn" placeholder="y: 19" type="number" onchange="nn_updateEndY(this.value)"></input>
                 </div>
-                <h3 class="counter">Current generation: <span id="zone_gen">1</span></h3>
-                <button class="button" id="stop2" disabled onclick="stopZoneSimulation()">Stop Simulation</button>
+                <div class="coordContainer">
+                    <p class="settingsHdr">Hidden Layers: </p>
+                    <input class="layerInput" id="hiddenLayers" placeholder="ex: 32, 16" onchange="nn_updateHidden(this.value)"></input>
+                </div>
+                <h3 class="counter">Current generation: <span id="nn_gen">1</span></h3>
+                <button class="button" id="nn_stop" disabled onclick="nn_stop()">Stop Simulation</button>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="assets/js/agent.js"></script>
-    <script type="text/javascript" src="assets/js/utils.js"></script>
-    <script type="text/javascript" src="assets/js/genetic_simulation_pathfinding.js"></script>
-    <script type="text/javascript" src="assets/js/genetic_simulation_zones.js"></script>
+    <script type="text/javascript" src="src/utils.js"></script>
+    <script type="text/javascript" src="src/network.js"></script>
+    <script type="text/javascript" src="src/agent.js"></script>
+    <script type="text/javascript" src="src/simulation.js"></script>
+    <script type="text/javascript" src="src/v1_simulation.js"></script>
+    <script type="text/javascript" src="src/nn_simulation.js"></script>
 </body>
 
 </html>

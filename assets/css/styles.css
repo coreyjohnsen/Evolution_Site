@@ -3,16 +3,47 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 3rem;
+    margin: 3rem 0;
 }
 
 .header {
     color: white;
     text-align: center;
+    font-size: 3rem;
+    margin-bottom: 0rem;
+    text-shadow: 2px 0 #000000, -2px 0 #000000, 0 2px #000000, 0 -2px #000000,
+               1px 1px #000000, -1px -1px #000000, 1px -1px #000000, -1px 1px #000000;
 }
 
 body {
     background: linear-gradient(to right, rgb(0, 103, 129), rgb(0, 225, 255));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.description {
+    margin-top: 2rem;
+    padding: 1rem;
+    text-align: center;
+    background-color: white;
+    width: 65%;
+    border-radius: 20px;
+    box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+}
+
+.description p {
+    font-size: 20px;
+    text-align: left;
+    margin: 1rem 0 0 0;
+}
+
+.description h2 {
+    font-size: 30px;
+    text-align: center;
+    margin: 0;
 }
 
 canvas {
@@ -102,8 +133,21 @@ canvas {
     width: 3rem;
 }
 
+.layerInput {
+    margin-top: 0.3rem;
+    height: 1rem;
+}
+
 .counter {
     margin: 0.4rem 0 0.4rem 0;
+}
+
+.image {
+    width: 300px;
+    height: 300px;
+    margin: 0.5rem 0;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 /* Styles specific to mobile */

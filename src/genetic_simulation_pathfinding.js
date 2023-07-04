@@ -52,7 +52,7 @@ function startSimulation() {
     curr_tick = 0;
     agents = []
     for (let i = 0; i < agents_per_gen; i++)
-        agents.push(new Agent(agent_start.x, agent_start.y, getRandomGenome()))
+        agents.push(new Agent(agent_start.x, agent_start.y, getRandomGenome(ticks)))
     button = document.getElementById("start")
     button.disabled = true;
     stopButton = document.getElementById("stop")
