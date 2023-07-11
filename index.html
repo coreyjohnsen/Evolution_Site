@@ -10,6 +10,7 @@
 
 <body>
     <h1 class="header">Genetic Algorithm Simulation</h1>
+    <h2 class="subhdr">Pathfinding</h2>
     <div class="description">
         <h2 class="subheader">Version 1</h2>
         <p>
@@ -183,12 +184,54 @@
             </div>
         </div>
     </div>
+    <h2 class="subhdr">NP-Hard Problems</h2>
+    <div class="description">
+        <h2 class="subheader">Knapsack Problem</h2>
+        <p>
+            This simulation uses genetic algorithms to come up with a good solution to a given <a href="https://en.wikipedia.org/wiki/Knapsack_problem" target="_blank">knapsack problem</a>. Because the algorithm is not concerned with finding the absolute best solution and will instead
+            find a very good but possibly not optimal one, the algorithm is much faster since it does not need to check every possible combination of items. Items can be added as candidates with the panels below the game,
+            and items that are selected to be in the knapsack will be highlighted in green once the simulation finishes. More detailed outputs from the simulation can be found in the text box below the settings panels. In the traditional method of solving the knapsack problem, finding
+            the optimal solution for 50 items would take an extremely long time (2^50 operations). In the simulation below, a reasonably good solution for 50 or more items can be found almost instantly. <br><br>
+            Warning: for large problems (many generations, many items, etc.) the simulation may take a second to run and will freeze the page while doing so.
+        </p>
+    </div>
+    <div class="knapsackTile gameTile">
+        <div class="alignText">
+            <h2 class="subheader">Knapsack Items</h2>
+        </div>
+        <div class="itemList" id="itemList">
+        </div>
+    </div>
+    <div class="knapsackSettingsFlex">
+        <div class="knapsackSettingsTile">
+            <div class="itemConfig">
+                <input class="knapsackInput" placeholder="Item Cost" type="number" id="knapsackWeight"></input>
+                <input class="knapsackInput" placeholder="Item Value" type="number" id="knapsackValue"></input>
+                <div class="button" onclick="addKnapsackItem()">Add Item</div>
+            </div>
+        </div>
+        <div class="knapsackSettingsTile">
+            <div class="itemConfig">
+                <div class="button" onclick="startKnapsackSimulation()">Start Simulation</div>
+                <div class="button" onclick="randomizeItems()">Random 50 Items</div>
+            </div>
+        </div>
+        <div class="knapsackSettingsTile">
+            <div class="itemConfig">
+                <input class="knapsackInput" placeholder="Max Weight: 100" type="number" onchange="setMaxWeight(this.value)"></input>
+                <input class="knapsackInput" placeholder="Generations: 1000" type="number" onchange="setKnapsackGens(this.value)"></input>
+                <input class="knapsackInput" placeholder="Mutation Rate: 0.1" type="number" onchange="getKnapsackMutation(this.value)"></input>
+            </div>
+        </div>
+    </div>
+    <textarea id="knapsackOutput" readonly></textarea>
     <script type="text/javascript" src="src/utils.js"></script>
     <script type="text/javascript" src="src/network.js"></script>
     <script type="text/javascript" src="src/agent.js"></script>
     <script type="text/javascript" src="src/simulation.js"></script>
     <script type="text/javascript" src="src/v1_simulation.js"></script>
     <script type="text/javascript" src="src/nn_simulation.js"></script>
+    <script type="text/javascript" src="src/knapsackGame.js"></script>
 </body>
 
 </html>
